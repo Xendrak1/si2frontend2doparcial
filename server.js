@@ -18,20 +18,18 @@ app.use((req, res, next) => {
 
 // Servir archivos estáticos desde la carpeta dist
 const distPath = join(__dirname, 'dist');
-if (existsSync(distPath)) {
+if (!existsSync(distPath)) {
+  console.error('ERROR: dist folder not found at:', distPath);
+  console.error('Current directory:', __dirname);
+  app.get('*', (req, res) => {
+    res.status(500).send('Build files not found. Please run npm run build first.');
+  });
+} else {
+  console.log('✅ dist folder found at:', distPath);
   app.use(express.static(distPath, {
     maxAge: '1d',
     etag: true
   }));
-} else {
-  console.error('ERROR: dist folder not found!');
-  app.get('*', (req, res) => {
-    res.status(500).send('Build files not found. Please run npm run build first.');
-  });
-  app.listen(PORT, () => {
-    console.error(`Server started on port ${PORT} but dist folder is missing!`);
-  });
-  process.exit(1);
 }
 
 // Para React Router: todas las rutas que no sean archivos estáticos
@@ -53,8 +51,24 @@ app.get('*', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+// Manejo de errores del servidor
+app.on('error', (error) => {
+  console.error('Server error:', error);
+});
+
+// Iniciar servidor
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server running on port ${PORT}`);
   console.log(`📁 Serving files from: ${distPath}`);
+  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+});
+
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use`);
+  } else {
+    console.error('Server error:', error);
+  }
+  process.exit(1);
 });
 

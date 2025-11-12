@@ -53,6 +53,11 @@ export const logout = async () => {
   return res.data;
 };
 
+export const sendGlobalNotification = async (payload) => {
+  const res = await axios.post(`/notificaciones/enviar/`, payload);
+  return res.data;
+};
+
 // ================= CATEGORIAS =================
 export const getCategorias = async () => {
   const res = await axios.get(`/categorias/`);

@@ -45,6 +45,12 @@ const ReportesIcon = () => (
   </svg>
 );
 
+const BellIcon = () => (
+  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V4a2 2 0 10-4 0v1.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m8 0a3 3 0 11-6 0h6z" />
+  </svg>
+);
+
 const CategoriasIcon = () => (
   <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -117,6 +123,7 @@ const LayoutMinimal = ({ children }) => {
     { key: "pos", name: "POS", path: "/pos", Icon: VentasIcon, sub: true, permission: Permissions.VentasPOS },
     { key: "stocks", name: "Inventario", path: "/stocks", Icon: InventarioIcon, permission: Permissions.StockMov },
     { key: "reportes", name: "Reportes", path: "/reportes", Icon: ReportesIcon, permission: Permissions.ReportesVer },
+    { key: "notificaciones", name: "Notificaciones", path: "/notificaciones", Icon: BellIcon, permission: Permissions.NotificacionesEnviar },
     { key: "categorias", name: "Categorías", path: "/categorias", Icon: CategoriasIcon, permission: Permissions.CategoriasAll },
     { key: "roles", name: "Roles", path: "/roles", Icon: RolesIcon, permission: Permissions.RolesAll },
   ];

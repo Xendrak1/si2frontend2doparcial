@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { login as apiLogin, logout as apiLogout, me as apiMe } from "../api";
+import { login as apiLogin, logout as apiLogout, me as apiMe, register as apiRegister } from "../api";
 
 const AuthContext = createContext(null);
 
@@ -50,6 +50,22 @@ export function AuthProvider({ children }) {
       },
       loginWithCredentials: async (email, password) => {
         const res = await apiLogin(email, password); // { token, user }
+        try {
+          localStorage.setItem("token", res.token);
+        } catch {}
+        setUser(res.user);
+        return res.user;
+      },
+      registerCustomer: async ({ nombre, email, password }) => {
+        const payload = {
+          nombre: nombre || "",
+          email,
+          password,
+          rol: "cliente",
+        };
+        await apiRegister(payload);
+        // Tras registrar, iniciar sesión automáticamente
+        const res = await apiLogin(email, password);
         try {
           localStorage.setItem("token", res.token);
         } catch {}

@@ -18,6 +18,7 @@ export const Permissions = {
   ReportesVer: "reportes:ver",
   SucursalesAll: "sucursales:*",
   RolesAll: "roles:*",
+  NotificacionesEnviar: "notificaciones:enviar",
 };
 
 // Mapa sugerido

@@ -26,6 +26,7 @@ import RolesMinimal from "./pages/RolesMinimal";
 import MisPedidos from "./pages/MisPedidos";
 import SucursalesNew from "./pages/SucursalesNew";
 import PerfilNew from "./pages/PerfilNew";
+import NotificacionesMinimal from "./pages/NotificacionesMinimal";
 
 function App() {
   return (
@@ -51,6 +52,14 @@ function App() {
                   element={
                     <ProtectedRoute permission={Permissions.ReportesVer}>
                       <ReportesMinimal />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/notificaciones"
+                  element={
+                    <ProtectedRoute permission={Permissions.NotificacionesEnviar}>
+                      <NotificacionesMinimal />
                     </ProtectedRoute>
                   }
                 />

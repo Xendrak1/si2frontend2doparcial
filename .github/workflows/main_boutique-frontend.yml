@@ -62,9 +62,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4AA56A41AEF5437283C44724006FF644 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BD1C3281EDEF4990951FEAA882743FE5 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_43B7018318444D418B526648D08A2E51 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_EBF43A300CD0450DBDB34CBD23AC36CA }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_375CC9CF870146978144E09F8BA05B6F }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_ECB3FEAF4AC145C192D5A85A9AC3222D }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -73,4 +73,3 @@ jobs:
           app-name: 'boutique-frontend'
           slot-name: 'Production'
           package: ./dist
-

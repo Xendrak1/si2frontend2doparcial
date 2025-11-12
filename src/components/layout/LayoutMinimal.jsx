@@ -63,6 +63,12 @@ const RolesIcon = () => (
   </svg>
 );
 
+const UsersIcon = () => (
+  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a4 4 0 00-3-3.87M9 11a4 4 0 110-8 4 4 0 010 8zm6 7a4 4 0 10-8 0v2h8v-2zm7-7a4 4 0 11-8 0 4 4 0 018 0z" />
+  </svg>
+);
+
 const BagIcon = () => (
   <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 10-8 0v4M5 9h14l-1 10a2 2 0 01-2 2H8a2 2 0 01-2-2L5 9z" />
@@ -126,6 +132,7 @@ const LayoutMinimal = ({ children }) => {
     { key: "notificaciones", name: "Notificaciones", path: "/notificaciones", Icon: BellIcon, permission: Permissions.NotificacionesEnviar },
     { key: "categorias", name: "Categorías", path: "/categorias", Icon: CategoriasIcon, permission: Permissions.CategoriasAll },
     { key: "roles", name: "Roles", path: "/roles", Icon: RolesIcon, permission: Permissions.RolesAll },
+    { key: "usuarios", name: "Usuarios", path: "/usuarios", Icon: UsersIcon, permission: Permissions.RolesAll },
   ];
 
   // Menú base de tienda (siempre visible para clientes/invitados)

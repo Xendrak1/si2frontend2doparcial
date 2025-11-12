@@ -27,6 +27,7 @@ import MisPedidos from "./pages/MisPedidos";
 import SucursalesNew from "./pages/SucursalesNew";
 import PerfilNew from "./pages/PerfilNew";
 import NotificacionesMinimal from "./pages/NotificacionesMinimal";
+import UsuariosMinimal from "./pages/UsuariosMinimal";
 
 function App() {
   return (
@@ -60,6 +61,14 @@ function App() {
                   element={
                     <ProtectedRoute permission={Permissions.NotificacionesEnviar}>
                       <NotificacionesMinimal />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/usuarios"
+                  element={
+                    <ProtectedRoute permission={Permissions.RolesAll}>
+                      <UsuariosMinimal />
                     </ProtectedRoute>
                   }
                 />

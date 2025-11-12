@@ -37,10 +37,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: |
-            dist/
-            package.json
-            package-lock.json
+          path: .
+          exclude: |
+            node_modules/
+            src/
+            .git/
+            .github/
 
   deploy:
     runs-on: ubuntu-latest
@@ -68,4 +70,4 @@ jobs:
         with:
           app-name: 'boutique-frontend'
           slot-name: 'Production'
-          package: ./dist
+          package: .

@@ -25,11 +25,9 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        working-directory: ./frontend
         run: npm ci
 
       - name: Build application
-        working-directory: ./frontend
         run: npm run build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://boutiquebackend-cjfsbjeaehghcefc.brazilsouth-01.azurewebsites.net' }}
@@ -40,9 +38,9 @@ jobs:
         with:
           name: node-app
           path: |
-            frontend/dist/
-            frontend/package.json
-            frontend/package-lock.json
+            dist/
+            package.json
+            package-lock.json
 
   deploy:
     runs-on: ubuntu-latest

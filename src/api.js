@@ -333,7 +333,7 @@ export const createUsuario = async (data) => {
 };
 
 export const updateUsuario = async (id, data) => {
-  const res = await axios.put(`/usuarios/${id}/`, data);
+  const res = await axios.patch(`/usuarios/${id}/`, data);
   return res.data;
 };
 

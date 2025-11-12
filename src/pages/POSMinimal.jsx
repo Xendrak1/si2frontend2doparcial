@@ -3,6 +3,7 @@ import LayoutMinimal from "../components/layout/LayoutMinimal";
 import { getProductoVariantes, getStocks, getSucursales, posCheckout } from "../api";
 import { formatCurrency } from "../utils/helpers";
 import { getQrImage } from "../utils/images";
+import { useNotification } from "../context/NotificationContext";
 
 // POS Minimal: búsqueda rápida, carrito temporal y total con stock disponible
 const POSMinimal = () => {
@@ -14,6 +15,7 @@ const POSMinimal = () => {
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { showSuccess, showError, showWarning } = useNotification();
 
   useEffect(() => {
     (async () => {
@@ -72,7 +74,7 @@ const POSMinimal = () => {
   const addToCart = (pv) => {
     const stockDisponible = getStockDisponible(pv.id);
     if (stockDisponible <= 0) {
-      alert("No hay stock disponible para este producto.");
+      showWarning("No hay stock disponible para este producto.");
       return;
     }
     
@@ -82,7 +84,7 @@ const POSMinimal = () => {
         const copy = [...prev];
         const nuevaCantidad = copy[idx].qty + 1;
         if (nuevaCantidad > stockDisponible) {
-          alert(`Solo hay ${stockDisponible} unidades disponibles.`);
+          showWarning(`Solo hay ${stockDisponible} unidades disponibles.`);
           return copy;
         }
         copy[idx] = { ...copy[idx], qty: nuevaCantidad };
@@ -108,7 +110,7 @@ const POSMinimal = () => {
       const nuevaCantidad = Math.max(1, Math.min(qty, stockDisponible));
       
       if (qty > stockDisponible) {
-        alert(`Solo hay ${stockDisponible} unidades disponibles.`);
+        showWarning(`Solo hay ${stockDisponible} unidades disponibles.`);
       }
       
       return prev
@@ -123,9 +125,12 @@ const POSMinimal = () => {
   const total = cart.reduce((s, it) => s + it.precio * it.qty, 0);
 
   const cobrar = async () => {
-    if (cart.length === 0) return;
+    if (cart.length === 0) {
+      showWarning("El carrito está vacío. Agrega productos antes de cobrar.");
+      return;
+    }
     if (!sucursalActual) {
-      alert("Por favor, selecciona una sucursal antes de cobrar.");
+      showWarning("Por favor, selecciona una sucursal antes de cobrar.");
       return;
     }
     try {
@@ -139,7 +144,7 @@ const POSMinimal = () => {
         })),
       };
       const data = await posCheckout(payload);
-      alert(`Venta registrada (ID ${data.venta_id}) Total: ${formatCurrency(data.total)}`);
+      showSuccess(`Venta registrada (ID ${data.venta_id}) - Total: ${formatCurrency(data.total)}`);
       clearCart();
       // Recargar stocks y variantes después de la venta para reflejar cambios
       const [stockData, variantesData] = await Promise.all([
@@ -150,7 +155,7 @@ const POSMinimal = () => {
       setProductoVariantes(variantesData);
     } catch (e) {
       const errorMsg = e.response?.data?.detail || e.message || "Error al cobrar. Revisa el backend.";
-      alert(errorMsg);
+      showError(errorMsg);
       console.error("Error al cobrar:", e);
     }
   };

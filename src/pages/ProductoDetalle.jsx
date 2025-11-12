@@ -1,14 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LayoutMinimal from "../components/layout/LayoutMinimal";
 import { getProductos, getProductoImagenes } from "../api";
 import { useCart } from "../context/CartContext";
 import { getLocalProductImage } from "../utils/images";
 import { formatCurrency } from "../utils/helpers";
+import { useAuth } from "../context/AuthContext";
+import { useNotification } from "../context/NotificationContext";
 
 const ProductoDetalle = () => {
   const { id } = useParams();
   const { addItem } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { showWarning } = useNotification();
+  const navigate = useNavigate();
   const [producto, setProducto] = useState(null);
   const [imagenes, setImagenes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,6 +43,11 @@ const ProductoDetalle = () => {
       setLoading(false);
     }
   };
+  const requiereRegistro = () => {
+    showWarning("Para realizar compras necesitas registrarte o iniciar sesión.");
+    navigate("/login");
+  };
+
 
   const cover = useMemo(() => {
     if (!producto) return null;
@@ -92,6 +102,10 @@ const ProductoDetalle = () => {
               <button 
                 className="px-6 py-3 btn-accent" 
                 onClick={() => {
+                  if (!isAuthenticated) {
+                    requiereRegistro();
+                    return;
+                  }
                   const imagenUrl = cover && cover.startsWith('data:') ? null : cover;
                   addItem(producto, 1, imagenUrl);
                 }}

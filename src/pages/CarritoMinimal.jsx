@@ -2,17 +2,30 @@ import LayoutMinimal from "../components/layout/LayoutMinimal";
 import { useCart } from "../context/CartContext";
 import { formatCurrency } from "../utils/helpers";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useNotification } from "../context/NotificationContext";
 
 const CarritoMinimal = () => {
   const { items, updateQuantity, removeItem, totalAmount } = useCart();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { showWarning } = useNotification();
+
+  const handleCheckout = () => {
+    if (!isAuthenticated) {
+      showWarning("Necesitas registrarte o iniciar sesión para completar la compra.");
+      navigate("/login");
+      return;
+    }
+    navigate("/checkout");
+  };
 
   return (
     <LayoutMinimal>
       <header className="h-20 flex items-center justify-between px-12 border-b border-gray-200 bg-white">
         <h2 className="text-3xl font-light tracking-wide">Carrito</h2>
         {items.length > 0 && (
-          <button className="px-6 py-3 btn-accent" onClick={() => navigate("/checkout")}>
+          <button className="px-6 py-3 btn-accent" onClick={handleCheckout}>
             Ir al pago
           </button>
         )}
@@ -91,7 +104,7 @@ const CarritoMinimal = () => {
                   <span>Total</span>
                   <span className="font-bold">{formatCurrency(totalAmount)}</span>
                 </div>
-                <button className="w-full mt-4 px-4 py-3 btn-accent" onClick={() => navigate("/checkout")}>
+                <button className="w-full mt-4 px-4 py-3 btn-accent" onClick={handleCheckout}>
                   Proceder al pago
                 </button>
               </div>

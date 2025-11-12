@@ -93,6 +93,12 @@ const LogoutIcon = () => (
   </svg>
 );
 
+const LoginIcon = () => (
+  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h10m-3-4V7a2 2 0 012-2h5a2 2 0 012 2v10a2 2 0 01-2 2h-5a2 2 0 01-2-2v-1" />
+  </svg>
+);
+
 // Layout con sidebar COLAPSABLE más angosto y suave
 const LayoutMinimal = ({ children }) => {
   const location = useLocation();
@@ -332,9 +338,9 @@ const LayoutMinimal = ({ children }) => {
           })}
         </nav>
 
-        {/* Logout */}
-        {isAuthenticated && (
-          <div className="px-1 pb-3">
+        {/* Auth action */}
+        <div className="px-1 pb-3">
+          {isAuthenticated ? (
             <button
               onClick={async () => {
                 await logout();
@@ -349,8 +355,20 @@ const LayoutMinimal = ({ children }) => {
               </div>
               {sidebarExpanded && <span className="text-base font-medium">Cerrar sesión</span>}
             </button>
-          </div>
-        )}
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className={`flex items-center transition-all duration-200 rounded-xl w-[94%] mx-auto ${
+                sidebarExpanded ? "gap-3 justify-start px-6 py-3.5" : "justify-center py-3.5"
+              } ${mode === "admin" ? "hover:bg-gray-900" : "hover:bg-gray-800/60"}`}
+            >
+              <div className="flex-shrink-0 w-6 h-6">
+                <LoginIcon />
+              </div>
+              {sidebarExpanded && <span className="text-base font-medium">Iniciar sesión</span>}
+            </button>
+          )}
+        </div>
 
         {/* Footer más grande */}
         <div className={`border-t border-gray-800 text-xs text-gray-500 rounded-b-2xl ${

@@ -1,20 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import LayoutMinimal from "../components/layout/LayoutMinimal";
 import { getProductos, getProductoImagenes, getCategorias } from "../api";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { getLocalProductImage } from "../utils/images";
 import { formatCurrency } from "../utils/helpers";
+import { useAuth } from "../context/AuthContext";
+import { useNotification } from "../context/NotificationContext";
 
 // Tienda Minimal: grilla de productos con búsqueda y agregar al carrito
 const TiendaMinimal = () => {
   const { addItem } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { showWarning } = useNotification();
   const [productos, setProductos] = useState([]);
   const [imagenes, setImagenes] = useState({});
   const [categorias, setCategorias] = useState([]);
   const [categoriaSel, setCategoriaSel] = useState("all");
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
@@ -78,6 +83,11 @@ const TiendaMinimal = () => {
   }, [productos, search, categoriaSel, catMap]);
 
   const getCover = (p) => {
+  const requiereRegistro = () => {
+    showWarning("Para realizar compras necesitas registrarte o iniciar sesión.");
+    navigate("/login");
+  };
+
     const list = imagenes[p.id] || [];
     const fromApi = list[0];
     // Solo imágenes reales (DB). Sin placeholders externos.
@@ -155,6 +165,10 @@ const TiendaMinimal = () => {
                           </div>
                           <button
                             onClick={() => {
+                              if (!isAuthenticated) {
+                                requiereRegistro();
+                                return;
+                              }
                               const imagenUrl = getCover(p);
                               addItem(p, 1, imagenUrl);
                             }}
@@ -193,7 +207,13 @@ const TiendaMinimal = () => {
                   </Link>
                   <div className="text-sm text-gray-600 mb-3">{formatCurrency(p.precio)}</div>
                   <button
-                    onClick={() => addItem(p, 1)}
+                    onClick={() => {
+                      if (!isAuthenticated) {
+                        requiereRegistro();
+                        return;
+                      }
+                      addItem(p, 1);
+                    }}
                     className="w-full px-4 py-2 btn-accent"
                   >
                     Añadir al carrito

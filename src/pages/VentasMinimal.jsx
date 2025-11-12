@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import LayoutMinimal from "../components/layout/LayoutMinimal";
 import { getVentas, getClientes, confirmarPagoVenta } from "../api";
+import { useNotification } from "../context/NotificationContext";
 
 // Ventas - Blanco y Negro
 const VentasMinimal = () => {
   const [ventas, setVentas] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { showSuccess, showError } = useNotification();
 
   useEffect(() => {
     fetchData();
@@ -156,10 +158,11 @@ const VentasMinimal = () => {
                               onClick={async () => {
                                 try {
                                   await confirmarPagoVenta(venta.id);
+                                  showSuccess(`Pago confirmado para venta #${venta.id}. El cliente recibirá una notificación.`);
                                   fetchData(); // Recargar datos para actualizar totales
                                 } catch (error) {
                                   console.error("Error confirmando pago:", error);
-                                  alert("Error al confirmar el pago. Intenta nuevamente.");
+                                  showError("Error al confirmar el pago. Intenta nuevamente.");
                                 }
                               }}
                             >

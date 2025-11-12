@@ -1,10 +1,14 @@
 import { useCart } from "../../context/CartContext";
 import { formatCurrency } from "../../utils/helpers";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useNotification } from "../../context/NotificationContext";
 
 export default function CartDrawer({ open, onClose }) {
   const { items, updateQuantity, removeItem, totalAmount } = useCart();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { showWarning } = useNotification();
 
   return (
     <>
@@ -102,6 +106,12 @@ export default function CartDrawer({ open, onClose }) {
             }`}
             onClick={() => {
               if (items.length === 0) {
+                return;
+              }
+              if (!isAuthenticated) {
+                showWarning("Necesitas registrarte o iniciar sesión para completar la compra.");
+                onClose?.();
+                navigate("/login");
                 return;
               }
               onClose();

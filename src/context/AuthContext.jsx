@@ -25,20 +25,34 @@ export function AuthProvider({ children }) {
     (async () => {
       try {
         const token = localStorage.getItem("token");
-        if (token && !user) {
+        if (token) {
           const u = await apiMe();
           setUser(u);
+        } else {
+          // Si no hay token, limpiar usuario
+          setUser(null);
         }
-      } catch {}
+      } catch (error) {
+        // Si el token es inválido, limpiar todo
+        console.log("Token inválido, limpiando sesión:", error);
+        setUser(null);
+        try {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+        } catch {}
+      }
     })();
   }, []);
 
   const value = useMemo(
-    () => ({
-      user,
-      setUser,
-      isAuthenticated: !!user,
-      login: (u) => setUser(u),
+    () => {
+      const isAuth = !!user;
+      console.log("AuthContext - user:", user, "isAuthenticated:", isAuth);
+      return {
+        user,
+        setUser,
+        isAuthenticated: isAuth,
+        login: (u) => setUser(u),
       logout: async () => {
         try {
           await apiLogout();
@@ -72,7 +86,8 @@ export function AuthProvider({ children }) {
         setUser(res.user);
         return res.user;
       },
-    }),
+      };
+    },
     [user]
   );
 

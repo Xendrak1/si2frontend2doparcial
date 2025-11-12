@@ -82,12 +82,15 @@ const TiendaMinimal = () => {
     });
   }, [productos, search, categoriaSel, catMap]);
 
-  const getCover = (p) => {
   const requiereRegistro = () => {
+    console.log("Usuario no autenticado, mostrando advertencia");
     showWarning("Para realizar compras necesitas registrarte o iniciar sesión.");
-    navigate("/login");
+    setTimeout(() => {
+      navigate("/login");
+    }, 1500);
   };
 
+  const getCover = (p) => {
     const list = imagenes[p.id] || [];
     const fromApi = list[0];
     // Solo imágenes reales (DB). Sin placeholders externos.
@@ -165,6 +168,7 @@ const TiendaMinimal = () => {
                           </div>
                           <button
                             onClick={() => {
+                              console.log("Botón clickeado, isAuthenticated:", isAuthenticated);
                               if (!isAuthenticated) {
                                 requiereRegistro();
                                 return;
@@ -208,11 +212,13 @@ const TiendaMinimal = () => {
                   <div className="text-sm text-gray-600 mb-3">{formatCurrency(p.precio)}</div>
                   <button
                     onClick={() => {
+                      console.log("Botón clickeado, isAuthenticated:", isAuthenticated);
                       if (!isAuthenticated) {
                         requiereRegistro();
                         return;
                       }
-                      addItem(p, 1);
+                      const imagenUrl = getCover(p);
+                      addItem(p, 1, imagenUrl);
                     }}
                     className="w-full px-4 py-2 btn-accent"
                   >

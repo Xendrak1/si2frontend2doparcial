@@ -45,6 +45,7 @@ export const NotificationProvider = ({ children }) => {
   }, [browserNotificationPermission]);
 
   const addNotification = useCallback((type, message, options = {}) => {
+    console.log("addNotification llamado:", { type, message, options });
     const id = Date.now() + Math.random();
     const notification = { 
       id, 
@@ -54,7 +55,12 @@ export const NotificationProvider = ({ children }) => {
       duration: options.duration || 5000
     };
     
-    setNotifications((prev) => [...prev, notification]);
+    console.log("Agregando notificación al estado:", notification);
+    setNotifications((prev) => {
+      const newNotifications = [...prev, notification];
+      console.log("Notificaciones actualizadas:", newNotifications);
+      return newNotifications;
+    });
 
     // Mostrar notificación del navegador para eventos importantes
     if (options.showBrowserNotification !== false && (type === "error" || type === "success")) {
@@ -85,7 +91,8 @@ export const NotificationProvider = ({ children }) => {
   }, [addNotification]);
 
   const showWarning = useCallback((message, options = {}) => {
-    addNotification("warning", message, options);
+    console.log("showWarning llamado con mensaje:", message);
+    addNotification("warning", message, { ...options, duration: options.duration || 6000 });
   }, [addNotification]);
 
   const showInfo = useCallback((message, options = {}) => {

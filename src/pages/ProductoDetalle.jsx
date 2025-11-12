@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import LayoutMinimal from "../components/layout/LayoutMinimal";
 import { getProductos, getProductoImagenes } from "../api";
@@ -43,10 +43,12 @@ const ProductoDetalle = () => {
       setLoading(false);
     }
   };
-  const requiereRegistro = () => {
+  const requiereRegistro = useCallback(() => {
     showWarning("Para realizar compras necesitas registrarte o iniciar sesión.");
-    navigate("/login");
-  };
+    setTimeout(() => {
+      navigate("/login");
+    }, 1500);
+  }, [showWarning, navigate]);
 
 
   const cover = useMemo(() => {

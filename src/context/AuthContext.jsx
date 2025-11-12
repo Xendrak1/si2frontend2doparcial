@@ -34,7 +34,6 @@ export function AuthProvider({ children }) {
         }
       } catch (error) {
         // Si el token es inválido, limpiar todo
-        console.log("Token inválido, limpiando sesión:", error);
         setUser(null);
         try {
           localStorage.removeItem("token");
@@ -45,14 +44,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => {
-      const isAuth = !!user;
-      console.log("AuthContext - user:", user, "isAuthenticated:", isAuth);
-      return {
-        user,
-        setUser,
-        isAuthenticated: isAuth,
-        login: (u) => setUser(u),
+    () => ({
+      user,
+      setUser,
+      isAuthenticated: !!user,
+      login: (u) => setUser(u),
       logout: async () => {
         try {
           await apiLogout();
@@ -86,8 +82,7 @@ export function AuthProvider({ children }) {
         setUser(res.user);
         return res.user;
       },
-      };
-    },
+    }),
     [user]
   );
 

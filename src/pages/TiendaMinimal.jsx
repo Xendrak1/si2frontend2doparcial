@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import LayoutMinimal from "../components/layout/LayoutMinimal";
 import { getProductos, getProductoImagenes, getCategorias } from "../api";
@@ -82,13 +82,12 @@ const TiendaMinimal = () => {
     });
   }, [productos, search, categoriaSel, catMap]);
 
-  const requiereRegistro = () => {
-    console.log("Usuario no autenticado, mostrando advertencia");
+  const requiereRegistro = useCallback(() => {
     showWarning("Para realizar compras necesitas registrarte o iniciar sesión.");
     setTimeout(() => {
       navigate("/login");
     }, 1500);
-  };
+  }, [showWarning, navigate]);
 
   const getCover = (p) => {
     const list = imagenes[p.id] || [];
@@ -168,7 +167,6 @@ const TiendaMinimal = () => {
                           </div>
                           <button
                             onClick={() => {
-                              console.log("Botón clickeado, isAuthenticated:", isAuthenticated);
                               if (!isAuthenticated) {
                                 requiereRegistro();
                                 return;
@@ -212,7 +210,6 @@ const TiendaMinimal = () => {
                   <div className="text-sm text-gray-600 mb-3">{formatCurrency(p.precio)}</div>
                   <button
                     onClick={() => {
-                      console.log("Botón clickeado, isAuthenticated:", isAuthenticated);
                       if (!isAuthenticated) {
                         requiereRegistro();
                         return;
